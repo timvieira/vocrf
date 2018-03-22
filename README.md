@@ -32,3 +32,7 @@ will run on a small subset of data.)
 * Tim Vieira\*, Ryan Cotterell\*, and Jason Eisner.
   [Speed-Accuracy Tradeoffs in Tagging with Variable-Order CRFs and Structured Sparsity](http://timvieira.github.com/doc/2016-emnlp-vocrf.pdf).
   EMNLP 2016.
+
+* Tim Vieira\*, Ryan Cotterell\*, and Jason Eisner.
+  [Forward-Backward with Failure Arcs: Faster Inference for Variable-Order Conditional Random Fields](http://timvieira.github.io/doc/2018-draft-vocrf2.pdf).
+  In preparation.
