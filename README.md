@@ -4,7 +4,7 @@ Variable-order CRFs
 **Install**
 
 We assume that you are running the
-[Anaconda](https://www.continuum.io/downloads) Python distribution.
+[Anaconda](https://www.continuum.io/downloads) Python distribution. This code uses Python 2.
 
 Type the following in your terminal and you should be good to go!
 
@@ -15,7 +15,7 @@ To grab some POS tagging data run, e.g., English UD data,
 
     $ make data/UD/English
 
-Here is an example invokation for training a model
+Here is an example invocation for training a model
 
     $ python vocrf/pos/tagfail.py --tag-type upos --lang English \
         --C .01 --budget 1500 \
