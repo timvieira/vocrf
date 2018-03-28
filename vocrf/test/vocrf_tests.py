@@ -24,7 +24,7 @@ class FailureArcTest(VoCRF):
         self.gradient(T, y, S)
 
         c = fdcheck(lambda: self.objective(T, y, S), S.weights, S.d_weights) #.show()
-        assert c.cosine >= 0.999999
+        assert c.pearson >= 0.999999
         assert c.max_err <= 1e-8
         assert np.allclose(c.expect, c.got)
         print '[test gradient]', colors.light_green % 'pass'
@@ -111,7 +111,7 @@ class LazyFailureArcTest(VoCRF):
         sparse.w[:] = sparse_W_copy
         dense.w[:] = dense_W_copy
         c = fdcheck(func, dense.w, g)
-        assert c.cosine >= 0.999999
+        assert c.pearson >= 0.999999
         assert c.max_err <= 1e-8
         assert np.allclose(c.expect, c.got)
         print '[test gradient]:', colors.light_green % 'pass'
