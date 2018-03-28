@@ -9,6 +9,7 @@ We assume that you are running the
 Type the following in your terminal and you should be good to go!
 
     $ make
+    $ make install
     $ make test
 
 To grab some POS tagging data run, e.g., English UD data,
