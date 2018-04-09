@@ -17,20 +17,34 @@ from vocrf.pos.instance import Instance
 
 def main():
     p = ArgumentParser()
-    p.add_argument('--initial-order', type=int, default=1)
-    p.add_argument('--max-order', type=int)
-    p.add_argument('--inner-iterations', type=int, required=True)
-    p.add_argument('--outer-iterations', type=int, required=True)
-    p.add_argument('--C', type=float, required=True)
-    p.add_argument('--budget', type=int, required=True)
-    p.add_argument('--context-count', type=int)
-    p.add_argument('--results', type=str)
-    p.add_argument('--lang', type=str, required=True)
-    p.add_argument('--tag-type', type=str, required=True, choices=('upos', 'xpos', 'mtag'))
-    p.add_argument('--quick', action='store_true')
-    p.add_argument('--baseline', action='store_true', help='Will take the last char subst closure.')
-    p.add_argument('--profile', choices=('yep', 'cprofile'))
-    p.add_argument('--dump')
+    p.add_argument('--initial-order', type=int, default=1,
+        help='This context size to use in the initial active set.')
+    p.add_argument('--max-order', type=int,
+        help='The largest context size to consider?')
+    p.add_argument('--inner-iterations', type=int, required=True,
+        help='Number of iterations to run before updating the active set.')
+    p.add_argument('--outer-iterations', type=int, required=True,
+        help='Number of iterations to run of active set.')
+    p.add_argument('--C', type=float, required=True,
+        help='L2 regularization coefficient.')
+    p.add_argument('--budget', type=int, required=True,
+        help=('Maximum number of contexts with nonzero weight under the model. '
+              'See the budget-driven shrinkage heuristic in the paper.'))
+    p.add_argument('--context-count', type=int,
+        help='Minimum frequency filter for contexts considered by active set.')
+    p.add_argument('--lang', type=str, required=True,
+        help='Which UD language to train on.')
+    p.add_argument('--tag-type', type=str, required=True,
+        choices=('upos', 'xpos', 'mtag'),
+        help='Which annotation column to train on from the UD schema.')
+    p.add_argument('--quick', action='store_true',
+        help='Quickly test on a small subset of training data.')
+    p.add_argument('--baseline', action='store_true',
+        help='Will take the last char subst closure.')
+    p.add_argument('--profile', choices=('yep', 'cprofile'),
+        help='Performance profiling.')
+    p.add_argument('--dump', type=str,
+        help='Directory to dump the results of training.')
 
     args = p.parse_args()
 
