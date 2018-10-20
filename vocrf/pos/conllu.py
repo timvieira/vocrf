@@ -115,12 +115,11 @@ class CoNLL_U(Dataset):
         other.remove(c)
         breakdown = ', '.join('%s: %.2f' % (c, 100 * correct[c] / total[c])  for c in sorted(other))
 
-        print '%s (%s)' % (acc, breakdown)
+        print('%s (%s)' % (acc, breakdown))
 
         if verbosity >= 2:
-            print
-            print 'F1 breakdown'
-            print '============'
+            print('F1 breakdown')
+            print('============')
             ff.scores()
 
         return correct['overall'] / total['overall']
@@ -134,7 +133,7 @@ def main():
                    help='CoNLLu POS dataset root directory.')
     args = p.parse_args()
     c = CoNLL_U(args.directory)
-    print c
+    print(c)
 
 
 if __name__ == '__main__':

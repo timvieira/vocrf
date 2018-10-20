@@ -1,11 +1,11 @@
 from __future__ import division
 
-import cPickle
+import pickle
 import numpy as np
 from path import Path
 
 from arsenal import colors, iterview
-from arsenal.math import compare
+from arsenal.maths import compare
 from arsenal.fsutils import mkdir
 from arsenal.iterextras import groupby2
 
@@ -14,7 +14,7 @@ from vocrf.score import ScoringModel
 from vocrf.updates.spom import OnlineProx
 from vocrf.pos.instance import MAGIC
 from vocrf.util import prefix_closure, last_char_sub_closure
-from lazygrad.adagrad import LazyRegularizedAdagrad
+from vocrf.lazygrad.adagrad import LazyRegularizedAdagrad
 
 
 class ActiveSet(VoCRF):
@@ -82,7 +82,7 @@ class ActiveSet(VoCRF):
             b4 = len(C)
             C = set(last_char_sub_closure(sigma, C))
             C.add(())
-            print '[last-char closure] before: %s, after: %s' % (b4, len(C))
+            print('[last-char closure] before: %s, after: %s' % (b4, len(C)))
         return VoCRF.update(self, sigma, C)
 
     def active_features(self, verbose=1):
@@ -98,24 +98,22 @@ class ActiveSet(VoCRF):
         #self.check_L0_group_norm_proxy(self.dense)
 
         if verbose:
-            print '%s: %s out of %s' % (colors.yellow % 'active', len(active), len(self.C)),
+            print('%s: %s out of %s' % (colors.yellow % 'active', len(active), len(self.C)))
             B = groupby2(active, len)
-            print '(budget %s, sizes %s)' % (self.group_budget,
-                                             ', '.join('%s: %s' % (z, len(B[z])) for z in sorted(B)))
+            print ('(budget %s, sizes %s)' % (self.group_budget,
+                                             ', '.join('%s: %s' % (z, len(B[z])) for z in sorted(B))))
 
         return active
 
     def active_set(self):
-        for outer in xrange(1, self.outer_iterations+1):
-            print
-            print colors.green % '====================='
-            print colors.green % 'Outer %s' % outer
+        for outer in range(1, self.outer_iterations+1):
+            print(colors.green % '=====================')
+            print(colors.green % 'Outer %s' % outer)
 
             self.inner_optimization(self.inner_iterations)
 
             if outer != self.outer_iterations:
-                print
-                print colors.yellow % 'Grow %s' % outer
+                print(colors.yellow % 'Grow %s' % outer)
 
                 # old feature index
                 old = {c: self.context_feature_id(c) for c in self.C}
@@ -195,7 +193,7 @@ class ActiveSet(VoCRF):
                 # Update DFA and group lasso data structures.
                 self.update(self.sigma, cc)
                 self.dense.set_groups(self.group_structure())
-                print colors.yellow % '=> new', '|C| = %s' % len(self.C)
+                print(colors.yellow % '=> new', '|C| = %s' % len(self.C))
 
                 # Copy previous weights
                 for c in self.C:
@@ -206,11 +204,9 @@ class ActiveSet(VoCRF):
                         self.dense.q[i] = q[o]
 
                 if 0:
-                    print
-                    print colors.light_red % 'is accuracy the same???????'
+                    print(colors.light_red % 'is accuracy the same???????')
                     self.after_inner_pass()
-                    print colors.light_red % '^^^^^^^^^^^^^^^^^^^^^^^^^^^'
-                    print
+                    print(colors.light_red % '^^^^^^^^^^^^^^^^^^^^^^^^^^^')
 
                 if TEST_EXPECT:
                     # DEBUGGING: check that expections match
@@ -291,14 +287,14 @@ class ActiveSet(VoCRF):
         })
 
         with file(self.dump / 'log.pkl', 'wb') as f:
-            cPickle.dump(self.log, f)
+            pickle.dump(self.log, f)
 
         if dev > self.dev_best:          # save model only when dev performance increases
-            print colors.light_green % 'New best!'
+            print(colors.light_green % 'New best!')
             if self.dump is not None:
                 with file(self.dump / 'state.pkl', 'wb') as f:
-                    cPickle.dump(self.__getstate__(), f)
-                print '>>> wrote model to', f.name
+                    pickle.dump(self.__getstate__(), f)
+                print('>>> wrote model to', f.name)
 
     def __getstate__(self):
         return {'H': self.H,

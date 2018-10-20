@@ -6,7 +6,6 @@
 #cython: infertypes=True
 #cython: cdivision=True
 #distutils: language = c++
-#distutils: libraries = ['stdc++']
 
 cdef class SparseBinaryVector(object):
     cdef readonly int[:] keys

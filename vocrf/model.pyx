@@ -8,7 +8,6 @@
 #cython: nonecheck=False
 #cython: initializedcheck=False
 #distutils: language = c++
-#distutils: libraries = ['stdc++']
 #distutils: extra_compile_args = ["-std=c++11"]
 
 cimport cython
@@ -22,7 +21,7 @@ from vocrf.sparse cimport SparseBinaryVector
 from vocrf.util import longest_suffix_in, prefix_closure, groups, suffixes
 
 from arsenal.alphabet import Alphabet
-from lazygrad.adagrad cimport LazyRegularizedAdagrad
+from vocrf.lazygrad.adagrad cimport LazyRegularizedAdagrad
 
 from libcpp.vector cimport vector
 

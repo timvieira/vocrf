@@ -7,7 +7,7 @@ import codecs
 import itertools
 from collections import Counter, defaultdict
 from arsenal import iterview
-from arsenal.math import compare
+from arsenal.maths import compare
 
 
 def prefix_closure(C):
@@ -28,7 +28,7 @@ def prefix_closure(C):
       [(), ('A',), ('B',), ('B', 'B')]
 
     """
-    P = {z[:p] for z in C for p in xrange(len(z)+1)}
+    P = {z[:p] for z in C for p in range(len(z)+1)}
     return list(sorted(P))
 
 
@@ -123,7 +123,7 @@ def prefixes(w, n=None, frequency=None, threshold=5):
     """
     if n is None:
         n = len(w)
-    x = [w[:i] for i in xrange(min(len(w), n)+1)]
+    x = [w[:i] for i in range(min(len(w), n)+1)]
     if frequency is not None:
         x = frequency_filter(x, frequency, threshold)
     return x
@@ -149,7 +149,7 @@ def suffixes(w, n=None, frequency=None, threshold=5):
     """
     if n is None:
         n = len(w)
-    x = [w[-i:] for i in xrange(1, min(len(w)+1, n+1))]
+    x = [w[-i:] for i in range(1, min(len(w)+1, n+1))]
     if frequency is not None:
         x = frequency_filter(x, frequency, threshold)
     return x
@@ -166,7 +166,7 @@ def ngram_counts(data, n):
     counts = Counter()
     for s in data:
         m = len(s)
-        for i in xrange(m):
+        for i in range(m):
             if i+n > m:
                 continue
             w = s[i:i+n]
