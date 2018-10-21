@@ -110,10 +110,10 @@ class CoNLL_U(Dataset):
         #print 'sentences:', len(data), 'tokens:', total['overall']
 
         c = 'overall'
-        acc = '%s: %.2f' % (colors.light_yellow % c, 100 * correct[c] / total[c])
-        other = total.keys()
+        acc = '%s: %.2f' % (colors.yellow % c, 100 * correct[c] / total[c])
+        other = list(total)
         other.remove(c)
-        breakdown = ', '.join('%s: %.2f' % (c, 100 * correct[c] / total[c])  for c in sorted(other))
+        breakdown = ', '.join('%s: %.2f' % (c, 100 * correct[c] / total[c]) for c in sorted(other))
 
         print('%s (%s)' % (acc, breakdown))
 

@@ -149,7 +149,7 @@ class ActiveSet(VoCRF):
                 #
                 # I found that guessing the mean q works better than min or max.
                 self.dense.w[:] = 0
-                self.dense.q[:] = q.mean()
+                self.dense.q[:] = float(q.mean())
 
                 # Grow active contexts to the right.
                 cc = {p+(y,) for p in active for y in self.sigma}
@@ -242,7 +242,7 @@ class ActiveSet(VoCRF):
 
     def inner_optimization(self, iterations, prox_every=25):
         budget = self.group_budget
-        for t in xrange(iterations):
+        for t in range(iterations):
             print
             np.random.shuffle(self.train)
             for x in iterview(self.train, colors.green % 'Pass %s' % (t+1)):
@@ -286,13 +286,13 @@ class ActiveSet(VoCRF):
             'contexts': {c: self.dense.w[self.context_feature_id(c)] for c in self.C if c},
         })
 
-        with file(self.dump / 'log.pkl', 'wb') as f:
+        with open(self.dump / 'log.pkl', 'wb') as f:
             pickle.dump(self.log, f)
 
         if dev > self.dev_best:          # save model only when dev performance increases
-            print(colors.light_green % 'New best!')
+            print(colors.green % 'New best!')
             if self.dump is not None:
-                with file(self.dump / 'state.pkl', 'wb') as f:
+                with open(self.dump / 'state.pkl', 'wb') as f:
                     pickle.dump(self.__getstate__(), f)
                 print('>>> wrote model to', f.name)
 

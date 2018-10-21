@@ -14,6 +14,7 @@ import numpy as np
 from vocrf.updates.adagrad cimport RegularizedAdagrad
 from libcpp.vector cimport vector
 from libc.math cimport sqrt
+from libc.stdint cimport int32_t, int64_t
 
 cdef inline double inf = float('inf')
 
@@ -86,7 +87,7 @@ cdef class OnlineProx(RegularizedAdagrad):
         """
         cdef int j
         cdef double z
-        cdef long[:] S
+        cdef int64_t[:] S
 
         self.update_group_norm()
 

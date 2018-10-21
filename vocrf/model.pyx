@@ -57,7 +57,7 @@ cdef class VoCRF(object):
 
     def group_structure(self):
         G = groups(self.C)
-        return map(lambda g: list(sorted(map(self.context_feature_id, g))), G.values())
+        return list(map(lambda g: list(sorted(map(self.context_feature_id, g))), G.values()))
 
     @cython.boundscheck(True)
     @cython.wraparound(True)
