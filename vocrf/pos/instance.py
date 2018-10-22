@@ -16,7 +16,7 @@ class Instance(object):
 
         # extract token properties
         self.properties = {}
-        for t in xrange(self.N):
+        for t in range(self.N):
 
             w   = token_padded(self.tokens, t)
             n   = token_padded(self.tokens, t+1)

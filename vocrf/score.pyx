@@ -7,7 +7,6 @@
 #cython: nonecheck=False
 #cython: initializedcheck=False
 #distutils: language = c++
-#distutils: libraries = ['stdc++']
 #distutils: extra_compile_args = ["-std=c++11"]
 
 import numpy as np

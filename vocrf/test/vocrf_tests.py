@@ -9,7 +9,7 @@ from vocrf.sparse import SparseBinaryVector
 from vocrf.updates.spom import OnlineProx
 from vocrf.score import ScoringModel
 from vocrf.util import fdcheck
-from lazygrad.adagrad import LazyRegularizedAdagrad
+from vocrf.lazygrad.adagrad import LazyRegularizedAdagrad
 
 
 class FailureArcTest(VoCRF):

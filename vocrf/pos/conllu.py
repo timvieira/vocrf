@@ -110,17 +110,16 @@ class CoNLL_U(Dataset):
         #print 'sentences:', len(data), 'tokens:', total['overall']
 
         c = 'overall'
-        acc = '%s: %.2f' % (colors.light_yellow % c, 100 * correct[c] / total[c])
-        other = total.keys()
+        acc = '%s: %.2f' % (colors.yellow % c, 100 * correct[c] / total[c])
+        other = list(total)
         other.remove(c)
-        breakdown = ', '.join('%s: %.2f' % (c, 100 * correct[c] / total[c])  for c in sorted(other))
+        breakdown = ', '.join('%s: %.2f' % (c, 100 * correct[c] / total[c]) for c in sorted(other))
 
-        print '%s (%s)' % (acc, breakdown)
+        print('%s (%s)' % (acc, breakdown))
 
         if verbosity >= 2:
-            print
-            print 'F1 breakdown'
-            print '============'
+            print('F1 breakdown')
+            print('============')
             ff.scores()
 
         return correct['overall'] / total['overall']
@@ -134,7 +133,7 @@ def main():
                    help='CoNLLu POS dataset root directory.')
     args = p.parse_args()
     c = CoNLL_U(args.directory)
-    print c
+    print(c)
 
 
 if __name__ == '__main__':
