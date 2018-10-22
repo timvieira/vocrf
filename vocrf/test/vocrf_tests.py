@@ -1,4 +1,4 @@
-from __future__ import division
+
 import numpy as np
 from collections import defaultdict
 from arsenal import colors
@@ -9,7 +9,7 @@ from vocrf.sparse import SparseBinaryVector
 from vocrf.updates.spom import OnlineProx
 from vocrf.score import ScoringModel
 from vocrf.util import fdcheck
-from vocrf.lazygrad.adagrad import LazyRegularizedAdagrad
+from lazygrad.adagrad import LazyRegularizedAdagrad
 
 
 class FailureArcTest(VoCRF):
@@ -27,8 +27,8 @@ class FailureArcTest(VoCRF):
         assert c.pearson >= 0.999999
         assert c.max_err <= 1e-8
         assert np.allclose(c.expect, c.got)
-        print '[test gradient]', colors.light_green % 'pass'
-        print
+        print('[test gradient]', colors.light.green % 'pass')
+        print()
 
 
 class MockInstance:
@@ -73,7 +73,7 @@ class LazyFailureArcTest(VoCRF):
 
         #groups = [[i] for i in range(self.H)]
         groups = self.group_structure()
-
+        
         dense = OnlineProx(groups, self.H, C=0, L=2, eta=1.0, fudge=1)
         dense.w[:] = np.random.uniform(-1, 1, size=dense.d)
 
@@ -93,7 +93,7 @@ class LazyFailureArcTest(VoCRF):
             return self.objective(T, x.tags, S)
 
         if 0:
-            # Note: we don't run this test because it doesn't pass! This is
+            # TODO: we don't run this test because it doesn't pass! This is
             # because lazy adagrad manipulates the stepsize somewhat
             # unpredictably in order to get the benefit of inlining (avoiding
             # allocating temproary datastructures to buffer adjoints before
@@ -114,7 +114,7 @@ class LazyFailureArcTest(VoCRF):
         assert c.pearson >= 0.999999
         assert c.max_err <= 1e-8
         assert np.allclose(c.expect, c.got)
-        print '[test gradient]:', colors.light_green % 'pass'
+        print('[test gradient]:', colors.light.green % 'pass')
 
     def test_overfitting(self, T, y=None):
         D = 100
@@ -127,19 +127,19 @@ class LazyFailureArcTest(VoCRF):
 
         x = MockInstance(T, self.A, D=D, K=5, y=y)
 
-        print
-        #print '[test overfitting]'
+        print()
+        #print('[test overfitting]')
         for _ in range(10):
             S = ScoringModel(x, self.A, self.feature_backoff, sparse, dense)
             self.gradient(T, x.tags, S)
             S.backprop()
             y = self.predict(x.N, S)
-            #print 'obj: %g, acc: %.2f' % (self.objective(T, x.tags, S),
-            #                              (y==x.tags).mean())
+            #print('obj: %g, acc: %.2f' % (self.objective(T, x.tags, S),
+            #                              (y==x.tags).mean()))
 
         y = self.predict(x.N, S)
         assert (y==x.tags).all()
-        print '[test overfitting]', colors.light_green % 'pass'
+        print('[test overfitting]', colors.light.green % 'pass')
 
 
 def test_stateful(sigma1, C1, sigma2, C2):
@@ -164,28 +164,28 @@ def test():
 
     # The following example include multiple backoffs.
     sigma1 = 'abcdefg'
-    C1 = map(tuple, [
+    C1 = list(map(tuple, [
         'aaa',
         'bba',
-    ])
+    ]))
 
     # The folling example is a conventional first-order tagger. It does not use
     # failure transition. I've added this test, as it was useful for debugging.
     sigma2 = 'ab'
-    C2 = map(tuple, [
+    C2 = list(map(tuple, [
         'aa',
         'ab',
         'ba',
         'bb',
-    ])
+    ]))
 
     test_stateful(sigma1, C1, sigma2, C2)
 
     # Small gradient example on lazy and eager EdgeScore modules.
     T = 10
-    print
+    print()
     FailureArcTest(sigma1, C1).test_gradient(T)
-    print
+    print()
     LazyFailureArcTest(sigma1, C1).test_gradient(T)
 
     # Note: In order for this test case to pass everytime we need a rich enough

@@ -91,7 +91,7 @@ def groups(C):
       {'': ['', 'a', 'ab', 'abc'], 'a': ['a', 'ab', 'abc'], 'ab': ['ab', 'abc'], 'abc': ['abc']}
 
       >>> G(['abc', 'bc'])
-      {'': ['', 'a', 'ab', 'abc', 'b', 'bc'], 'a': ['a', 'ab', 'abc'], 'ab': ['ab', 'abc'], 'abc': ['abc'], 'bc': ['bc'], 'b': ['b', 'bc']}
+      {'': ['', 'a', 'ab', 'abc', 'b', 'bc'], 'a': ['a', 'ab', 'abc'], 'ab': ['ab', 'abc'], 'abc': ['abc'], 'b': ['b', 'bc'], 'bc': ['bc']}
 
     Vieira, Cotterell and Eisner (2016) use *proper* descendants in the prefix
     tree of `C` because it's a closer fit to minimizing the number of *states*
@@ -160,7 +160,7 @@ def ngram_counts(data, n):
     Count `n`-grams in `data`.
 
     >>> ngram_counts(['abc', 'aa', 'ab', 'aba'], n=2)
-    Counter({'ab': 3, 'aa': 1, 'ba': 1, 'bc': 1})
+    Counter({'ab': 3, 'bc': 1, 'aa': 1, 'ba': 1})
 
     """
     counts = Counter()
@@ -178,7 +178,7 @@ def fixed_order_contexts(sigma, order):
     """
     Create tag set for fixed order model over tag alphabet `sigma`.
 
-    >>> map(''.join, fixed_order_contexts('AB', order=3))    # doctest: +NORMALIZE_WHITESPACE
+    >>> list(map(''.join, fixed_order_contexts('AB', order=3)))    # doctest: +NORMALIZE_WHITESPACE
     ['AAAA', 'AAAB', 'AABA', 'AABB',
      'ABAA', 'ABAB', 'ABBA', 'ABBB',
      'BAAA', 'BAAB', 'BABA', 'BABB',
@@ -192,7 +192,7 @@ def fdcheck(func, w, g, keys = None, eps = 1e-5):
     """
     Finite-difference check.
 
-    Returns `arsenal.math.compare` instance.
+    Returns `arsenal.maths.compare` instance.
 
     - `func`: zero argument function, which references `w` in caller's scope.
     - `w`: parameters.
@@ -203,9 +203,9 @@ def fdcheck(func, w, g, keys = None, eps = 1e-5):
     """
     if keys is None:
         if hasattr(w, 'keys'):
-            keys = w.keys()
+            keys = list(w.keys())
         else:
-            keys = range(len(w))
+            keys = list(range(len(w)))
     fd = {}
     for key in iterview(keys):
         was = w[key]

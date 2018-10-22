@@ -8,6 +8,7 @@
 #cython: nonecheck=False
 #cython: initializedcheck=False
 #distutils: language = c++
+#distutils: libraries = ['stdc++']
 #distutils: extra_compile_args = ["-std=c++11"]
 
 cimport cython
@@ -21,7 +22,7 @@ from vocrf.sparse cimport SparseBinaryVector
 from vocrf.util import longest_suffix_in, prefix_closure, groups, suffixes
 
 from arsenal.alphabet import Alphabet
-from vocrf.lazygrad.adagrad cimport LazyRegularizedAdagrad
+from lazygrad.adagrad cimport LazyRegularizedAdagrad
 
 from libcpp.vector cimport vector
 
@@ -104,7 +105,7 @@ cdef class VoCRF(object):
             transition[s, a] = longest_suffix_in(c, states)
 
         # empty state has explicit transitions for each element of sigma.
-        # TODO: This should be a default (rho) arc.
+        # TODO: This should be a default (rho) arc, right?
         for y in sigma:
             if y not in arcs[()]:
                 arcs[()].append(y)

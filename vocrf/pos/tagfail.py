@@ -1,9 +1,11 @@
 """
 Run POS tagging experiments.
 """
-from __future__ import division
 
+
+import pylab as pl
 from argparse import ArgumentParser
+from arsenal import colors
 from arsenal.timer import timeit
 from arsenal.iterextras import groupby2
 
@@ -15,34 +17,20 @@ from vocrf.pos.instance import Instance
 
 def main():
     p = ArgumentParser()
-    p.add_argument('--initial-order', type=int, default=1,
-        help='This context size to use in the initial active set.')
-    p.add_argument('--max-order', type=int,
-        help='The largest context size to consider?')
-    p.add_argument('--inner-iterations', type=int, required=True,
-        help='Number of iterations to run before updating the active set.')
-    p.add_argument('--outer-iterations', type=int, required=True,
-        help='Number of iterations to run of active set.')
-    p.add_argument('--C', type=float, required=True,
-        help='L2 regularization coefficient.')
-    p.add_argument('--budget', type=int, required=True,
-        help=('Maximum number of contexts with nonzero weight under the model. '
-              'See the budget-driven shrinkage heuristic in the paper.'))
-    p.add_argument('--context-count', type=int,
-        help='Minimum frequency filter for contexts considered by active set.')
-    p.add_argument('--lang', type=str, required=True,
-        help='Which UD language to train on.')
-    p.add_argument('--tag-type', type=str, required=True,
-        choices=('upos', 'xpos', 'mtag'),
-        help='Which annotation column to train on from the UD schema.')
-    p.add_argument('--quick', action='store_true',
-        help='Quickly test on a small subset of training data.')
-    p.add_argument('--baseline', action='store_true',
-        help='Will take the last char subst closure.')
-    p.add_argument('--profile', choices=('yep', 'cprofile'),
-        help='Performance profiling.')
-    p.add_argument('--dump', type=str,
-        help='Directory to dump the results of training.')
+    p.add_argument('--initial-order', type=int, default=1)
+    p.add_argument('--max-order', type=int)
+    p.add_argument('--inner-iterations', type=int, required=True)
+    p.add_argument('--outer-iterations', type=int, required=True)
+    p.add_argument('--C', type=float, required=True)
+    p.add_argument('--budget', type=int, required=True)
+    p.add_argument('--context-count', type=int)
+    p.add_argument('--results', type=str)
+    p.add_argument('--lang', type=str, required=True)
+    p.add_argument('--tag-type', type=str, required=True, choices=('upos', 'xpos', 'mtag'))
+    p.add_argument('--quick', action='store_true')
+    p.add_argument('--baseline', action='store_true', help='Will take the last char subst closure.')
+    p.add_argument('--profile', choices=('yep', 'cprofile'))
+    p.add_argument('--dump')
 
     args = p.parse_args()
 
@@ -55,7 +43,7 @@ def contexts_by_count(corpus, max_order, threshold):
     "Find n-grams in `corpus` with count >= `threshold` and order <= `max_order`."
     C = set()
     for n in range(1, max_order+2):    # +2 because order=0 is size 1; order=1 size 2.
-        C.update(k for k, v in corpus.tag_ngram_counts(n=n).items() if v >= threshold)
+        C.update(k for k,v in corpus.tag_ngram_counts(n=n).items() if v >= threshold)
     return C
 
 
@@ -83,20 +71,21 @@ def _main(args):
 
         if 0:
             # things that survived the threshold.
-            for k, v in B.items():
+            for k, v in list(B.items()):
                 if k >= 10:   # context size >= 10
+                    print()
                     print(k)
                     for vv in v:
                         print('-'.join(vv))
-            pl.plot(B.keys(), map(len, B.values()))
+            pl.plot(list(B.keys()), list(map(len, list(B.values()))))
             pl.show()
 
         if 0:
             max_order = args.outer_iterations
             C = {}
-            for n in xrange(1, max_order+1):   # initial order + num iters
+            for n in range(1, max_order+1):   # initial order + num iters
                 C.update(corpus.tag_ngram_counts(n=n))
-            pl.scatter(map(len, C.keys()), C.values(), lw=0, alpha=0.5)
+            pl.scatter(list(map(len, list(C.keys()))), list(C.values()), lw=0, alpha=0.5)
             pl.show()
 
     elif args.max_order is not None:

@@ -36,7 +36,7 @@ class Dataset(object):
         "Convert tuples in data `fold` to instances of `cls`."
         data = []
         for x in iterview(getattr(self, fold), msg='Features (%s)' % fold):
-            tags, tokens = zip(*x)
+            tags, tokens = list(zip(*x))
             data.append(cls(tokens, self.Y.map(tags), self))
         return data
 
@@ -51,7 +51,7 @@ class Dataset(object):
 
             """
             for e in self.train:
-                y, _ = zip(*e)
+                y, _ = list(zip(*e))
 #                assert all(isinstance(yy, int) for yy in y), y
 #                yield tuple(Y.lookup_many(y))
                 yield y

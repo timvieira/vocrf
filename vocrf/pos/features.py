@@ -55,12 +55,12 @@ def letter_pattern(w):
 
     Examples:
 
-      >>> print letter_pattern("McDonald's")
+      >>> print(letter_pattern("McDonald's"))
       AaAa+'a
 
     Special handling for special PTB tokens,
 
-      >>> print letter_pattern("-LRB-")
+      >>> print(letter_pattern("-LRB-"))
       -LRB-
 
     """
@@ -113,7 +113,7 @@ def char(x):
 def word_shape(w):
     """Similar to letter_pattern, but without consecutive classes collapsing.
 
-    >>> print word_shape("McDonald's")
+    >>> print(word_shape("McDonald's"))
     AaAaaaaa'a
 
     """

@@ -50,6 +50,7 @@ class Instance(object):
             F += P
             F += S
 
+            import warnings; warnings.warn('need to set hash seed to get a stable hash. otherwise the parameters learned will not work when you start a new Python interpreter.')
             F = [abs(hash(x)) % MAGIC for x in F]
             F.sort()
             self.properties[t] = SparseBinaryVector(F)

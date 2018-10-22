@@ -1,4 +1,4 @@
-from __future__ import division
+
 import pylab as pl
 import numpy as np
 from vocrf.updates.tree_prox import TreeProx, Tree
@@ -43,7 +43,7 @@ def random_contexts(sigma, depth, size):
     |w|=`depth` for w in W, from a |alphabet|=sigma.
 
     """
-    sigma = range(sigma)
+    sigma = list(range(sigma))
     possible = list(xprod(*(sigma,)*depth))
     np.random.shuffle(possible)
     return list(prefix_closure(possible[:size]))
@@ -99,14 +99,14 @@ class TreeProxTest(TreeProx):
         opt = minimize(obj, w_orig, method='bfgs').x
         #opt = fmin(obj, w_orig)
 
-        print 'opt', obj(opt)
-        print 'ours', obj(w)
-        #print 'paper', obj(w_paper)
+        print('opt', obj(opt))
+        print('ours', obj(w))
+        #print('paper', obj(w_paper))
         #err = abs(opt-w).max()
-        #print 'L-inf error:', err
+        #print('L-inf error:', err)
 
         assert obj(w) <= obj(opt) #+ 1e-4
-        print '[test prox]', colors.light_green % 'pass'
+        print('[test prox]', colors.light.green % 'pass')
 
     def test_budget(self):
         "Test the budget heuristic."
@@ -156,23 +156,23 @@ class TreeProxTest(TreeProx):
         #     statement?
         numerical_points = list(sorted(set(numerical_y)))
         heuristic_points = list(sorted(set(heuristic_y)))
-        print 'numerical:', numerical_points
-        print 'heuristic:', heuristic_points
+        print('numerical:', numerical_points)
+        print('heuristic:', heuristic_points)
 
         recall = len(set(numerical_points) & set(heuristic_points)) / len(set(numerical_points))
-        print 'recall: %.2f' % recall
+        print('recall: %.2f' % recall)
 
         if 0:
             # This plot is for debugging the conservativeness of the budget
             # heuristic, which is now asserted above.
             pl.title('Ability to conservatively meet the budget')
-            xs, ys = zip(*sorted(f.items()))
+            xs, ys = list(zip(*sorted(f.items())))
             pl.plot(xs, xs, c='k', alpha=0.5, linestyle=':')
             pl.plot(xs, ys, alpha=0.5, c='r', lw=2)
             pl.scatter(xs, ys, lw=0)
             pl.show()
 
-        print '[test budget]', colors.light_green % 'pass'
+        print('[test budget]', colors.light.green % 'pass')
 
 
 if __name__ == '__main__':

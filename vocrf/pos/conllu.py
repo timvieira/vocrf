@@ -1,4 +1,4 @@
-from __future__ import division
+
 
 import os
 from collections import Counter
@@ -107,17 +107,18 @@ class CoNLL_U(Dataset):
                         correct[c] += 1
                     total[c] += 1
 
-        #print 'sentences:', len(data), 'tokens:', total['overall']
+        #print('sentences:', len(data), 'tokens:', total['overall'])
 
         c = 'overall'
-        acc = '%s: %.2f' % (colors.yellow % c, 100 * correct[c] / total[c])
-        other = list(total)
+        acc = '%s: %.2f' % (colors.light.yellow % c, 100 * correct[c] / total[c])
+        other = list(total.keys())
         other.remove(c)
-        breakdown = ', '.join('%s: %.2f' % (c, 100 * correct[c] / total[c]) for c in sorted(other))
+        breakdown = ', '.join('%s: %.2f' % (c, 100 * correct[c] / total[c])  for c in sorted(other))
 
         print('%s (%s)' % (acc, breakdown))
 
         if verbosity >= 2:
+            print()
             print('F1 breakdown')
             print('============')
             ff.scores()

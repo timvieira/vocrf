@@ -21,7 +21,7 @@ class PTB(object):
         # http://aclweb.org/aclwiki/index.php?title=POS_Tagging_(State_of_the_art)
         #
         # train split [0,18]
-        for sectionid in xrange(19):
+        for sectionid in range(19):
             read = self.read_section(sectionid)
             for sentence in read:
                 #for tag, word in sentence:
@@ -46,7 +46,7 @@ class PTB(object):
                         self.suffixes[suffix] += 1
 
         # dev split [19,21]
-        for sectionid in xrange(19, 22):
+        for sectionid in range(19, 22):
             read = self.read_section(sectionid)
 
             for sentence in read:
@@ -57,7 +57,7 @@ class PTB(object):
                 self.dev.append(sentence)
 
         # test split [22,24]
-        for sectionid in xrange(22, 25):
+        for sectionid in range(22, 25):
             #for tag, word in sentence:
             #    if tag == self.Y["BAD"]:
             #        break
@@ -68,7 +68,7 @@ class PTB(object):
     def extract_prefixes(self, w, n=10):
         """ gets prefixes up to length n """
         prefixes = []
-        for i in xrange(1, min(len(w)+1, n+1)):
+        for i in range(1, min(len(w)+1, n+1)):
             segment = w[:i]
             if segment not in self.prefix2int:
                 self.prefix2int[segment] = len(self.prefix2int)
@@ -78,7 +78,7 @@ class PTB(object):
     def extract_suffixes(self, w, n=10):
         """ gets suffixes up to lenght n """
         suffixes = []
-        for i in xrange(1, min(len(w)+1, n+1)):
+        for i in range(1, min(len(w)+1, n+1)):
             segment = w[-i:]
             if segment not in self.suffix2int:
                 self.suffix2int[segment] = len(self.suffix2int)
@@ -122,4 +122,4 @@ class PTB(object):
 
 if __name__ == '__main__':
     ptb = PTB('data/Penn-Treebank-2/tagged/wsj')
-    print ptb.pp(ptb.train[5])
+    print(ptb.pp(ptb.train[5]))

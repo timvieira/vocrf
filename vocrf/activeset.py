@@ -1,5 +1,3 @@
-from __future__ import division
-
 import pickle
 import numpy as np
 from path import Path
@@ -14,7 +12,7 @@ from vocrf.score import ScoringModel
 from vocrf.updates.spom import OnlineProx
 from vocrf.pos.instance import MAGIC
 from vocrf.util import prefix_closure, last_char_sub_closure
-from vocrf.lazygrad.adagrad import LazyRegularizedAdagrad
+from lazygrad.adagrad import LazyRegularizedAdagrad
 
 
 class ActiveSet(VoCRF):
@@ -98,21 +96,23 @@ class ActiveSet(VoCRF):
         #self.check_L0_group_norm_proxy(self.dense)
 
         if verbose:
-            print('%s: %s out of %s' % (colors.yellow % 'active', len(active), len(self.C)))
+            print('%s: %s out of %s' % (colors.yellow % 'active', len(active), len(self.C)), end=' ')
             B = groupby2(active, len)
-            print ('(budget %s, sizes %s)' % (self.group_budget,
+            print('(budget %s, sizes %s)' % (self.group_budget,
                                              ', '.join('%s: %s' % (z, len(B[z])) for z in sorted(B))))
 
         return active
 
     def active_set(self):
         for outer in range(1, self.outer_iterations+1):
+            print()
             print(colors.green % '=====================')
             print(colors.green % 'Outer %s' % outer)
 
             self.inner_optimization(self.inner_iterations)
 
             if outer != self.outer_iterations:
+                print()
                 print(colors.yellow % 'Grow %s' % outer)
 
                 # old feature index
@@ -129,7 +129,7 @@ class ActiveSet(VoCRF):
                     for x in self.train:
                         S = ScoringModel(x, self.A, self.feature_backoff, self.sparse, self.dense)
                         self.gradient(x.N, x.tags, S)   # don't backprop thru scoring model because we don't change the parameters.
-                        predictions.append({k: S.d_dense[i] for k,i in old.iteritems()})
+                        predictions.append({k: S.d_dense[i] for k,i in old.items()})
 
                 # "Grow" Z by extending active features with on more character.
                 active = self.active_features()
@@ -149,7 +149,7 @@ class ActiveSet(VoCRF):
                 #
                 # I found that guessing the mean q works better than min or max.
                 self.dense.w[:] = 0
-                self.dense.q[:] = float(q.mean())
+                self.dense.q[:] = float(q.mean())   # [2018-08-13 Mon] the use of `float` is workaround for "BufferError: Object is not writable."
 
                 # Grow active contexts to the right.
                 cc = {p+(y,) for p in active for y in self.sigma}
@@ -204,9 +204,11 @@ class ActiveSet(VoCRF):
                         self.dense.q[i] = q[o]
 
                 if 0:
-                    print(colors.light_red % 'is accuracy the same???????')
+                    print()
+                    print(colors.light.red % 'is accuracy the same???????')
                     self.after_inner_pass()
-                    print(colors.light_red % '^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+                    print(colors.light.red % '^^^^^^^^^^^^^^^^^^^^^^^^^^^')
+                    print()
 
                 if TEST_EXPECT:
                     # DEBUGGING: check that expections match
@@ -232,18 +234,18 @@ class ActiveSet(VoCRF):
                         E.update({k: S.d_dense[new[k]] for k in want if k in new})
 
                         # XXX: filter down to features in both vectors, I guess?
-                        E = {k: v for k, v in E.iteritems() if k in new}
-                        want = {k: v for k, v in want.iteritems() if k in new}
+                        E = {k: v for k, v in E.items() if k in new}
+                        want = {k: v for k, v in want.items() if k in new}
 
                         c = compare(want, E, verbose=1)
 
-                        if c.cosine < .99:
+                        if c.pearson <= .99:
                             c.show()
 
     def inner_optimization(self, iterations, prox_every=25):
         budget = self.group_budget
         for t in range(iterations):
-            print
+            print()
             np.random.shuffle(self.train)
             for x in iterview(self.train, colors.green % 'Pass %s' % (t+1)):
 
@@ -290,7 +292,7 @@ class ActiveSet(VoCRF):
             pickle.dump(self.log, f)
 
         if dev > self.dev_best:          # save model only when dev performance increases
-            print(colors.green % 'New best!')
+            print(colors.light.green % 'New best!')
             if self.dump is not None:
                 with open(self.dump / 'state.pkl', 'wb') as f:
                     pickle.dump(self.__getstate__(), f)

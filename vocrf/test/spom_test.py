@@ -1,4 +1,4 @@
-from __future__ import division
+
 import pylab as pl
 import numpy as np
 from arsenal import colors
@@ -45,20 +45,20 @@ class SPOM_tests(VoCRF):
         assert len(coverage) == len(self.C)   # all features must appear in some group.
 
         if verbose:
-            print '[prox]', groups
+            print('[prox]', groups)
 
         if w is None:
             w_orig = np.random.uniform(-1, 1, size=self.H)
         else:
-            print 'H =', self.H, '|raw contexts| =', len(w)
+            print('H =', self.H, '|raw contexts| =', len(w))
             w_orig = np.zeros(self.H)
             for k in w:
                 w_orig[self.context_feature_id(k)] = w[k]
         del w
 
-        print (w_orig != 0).sum(), 'active features'
-        print sum(np.abs(w_orig[list(G)]).sum() > 0 for G in groups), 'active groups'
-        print len(groups), 'total groups'
+        print((w_orig != 0).sum(), 'active features')
+        print(sum(np.abs(w_orig[list(G)]).sum() > 0 for G in groups), 'active groups')
+        print(len(groups), 'total groups')
 
         dense = OnlineProx(groups, self.H, C=0, L=2, eta=1.0, fudge=1)
         dense.w[:] = w_orig.copy()
@@ -85,7 +85,7 @@ class SPOM_tests(VoCRF):
         # The maximum number of active groups. Is upper bounded by the number of
         # groups with a nonzero norm, which might <<= tne number of groups.
         max_active = sum(np.abs(w_orig[list(G)]).sum() > 0 for G in groups)
-        #print 'max_active:', max_active, 'number of groups:', len(groups)
+        #print('max_active:', max_active, 'number of groups:', len(groups))
         assert f[0] == 0
         assert f[max_active] == max_active
         assert f[M] == max_active
@@ -117,44 +117,44 @@ class SPOM_tests(VoCRF):
         #  ^^ We appear to be getting great coverage. Should we revise this
         #     statement?
 
-        print numerical_points
-        print heuristic_points
+        print(numerical_points)
+        print(heuristic_points)
 
         recall = len(set(numerical_points) & set(heuristic_points)) / len(set(numerical_points))
-        print 'recall: %.2f' % recall
+        print('recall: %.2f' % recall)
         assert recall >= 0.99, recall
 
         if 0:
             pl.title('Ability to conservatively meet the budget')
-            xs, ys = zip(*sorted(f.items()))
+            xs, ys = list(zip(*sorted(f.items())))
             pl.plot(xs, xs, c='k', alpha=0.5, linestyle=':')
             pl.plot(xs, ys, alpha=0.5, c='r', lw=2)
             pl.scatter(xs, ys, lw=0)
             pl.show()
 
-        print '[test budget]', colors.light_green % 'pass'
+        print('[test budget]', colors.light.green % 'pass')
 
 
 def test():
     # The following example include multiple backoffs.
     sigma1 = 'abcdefg'
-    C1 = map(tuple, [
+    C1 = list(map(tuple, [
         'aaa',
         'bba',
-    ])
+    ]))
 
     # The folling example is a conventional first-order tagger. It does not use
     # failure transition. I've added this test, as it was useful for debugging.
     sigma2 = 'ab'
-    C2 = map(tuple, [
+    C2 = list(map(tuple, [
         'aa',
         'ab',
         'ba',
         'bb',
-    ])
+    ]))
 
     sigma3 = 'abc'
-    C3 = map(tuple, [
+    C3 = list(map(tuple, [
         'aaaaaaac',
         'baaaaaaa',
         'baaaaaab',
@@ -163,31 +163,31 @@ def test():
         'abb',
         'baaba',
         'bb',
-    ])
+    ]))
 
-    print
-    print '[prox] Context 1'
+    print()
+    print('[prox] Context 1')
     SPOM_tests(sigma1, C1).test_prox_budget_heuristic()
 
-    print
-    print '[prox] Context 2:'
+    print()
+    print('[prox] Context 2:')
     SPOM_tests(sigma2, C2).test_prox_budget_heuristic()
 
-    print
-    print '[prox] Context 3:'
+    print()
+    print('[prox] Context 3:')
     SPOM_tests(sigma3, C3).test_prox_budget_heuristic()
 
     if 0:
         filename = 'weights.pkl'
-        print
-        print '[prox] Context %s' % filename
-        import cPickle
+        print()
+        print('[prox] Context %s' % filename)
+        import pickle
         with file(filename) as f:
-            w = cPickle.load(f)
-        SPOM_tests({a for c in w for a in c}, w.keys()).test_prox_budget_heuristic()     # with random weights
-        print
-        print '==================================='
-        SPOM_tests({a for c in w for a in c}, w.keys()).test_prox_budget_heuristic(w=w)  # with saved weights
+            w = pickle.load(f)
+        SPOM_tests({a for c in w for a in c}, list(w.keys())).test_prox_budget_heuristic()     # with random weights
+        print()
+        print('===================================')
+        SPOM_tests({a for c in w for a in c}, list(w.keys())).test_prox_budget_heuristic(w=w)  # with saved weights
 
 
 if __name__ == '__main__':

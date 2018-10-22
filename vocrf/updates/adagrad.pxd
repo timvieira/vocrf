@@ -8,6 +8,7 @@
 #cython: nonecheck=False
 #cython: initializedcheck=False
 #distutils: language = c++
+#distutils: libraries = ['stdc++']
 #distutils: extra_compile_args = ["-std=c++11"]
 
 from libc.math cimport sqrt
@@ -29,7 +30,8 @@ cdef class RegularizedAdagrad:
     cdef public:
         double C, eta, fudge, etaC
         int L, d
-        double[:] w, q
+        double[:] q
+        double[:] w
 
     cdef inline void update(self, double[:] g) nogil:
         cdef double d, z, sq

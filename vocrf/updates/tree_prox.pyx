@@ -9,7 +9,9 @@
 #cython: profile=False
 #cython: initializedcheck=False
 #distutils: language = c++
+#distutils: libraries = ['stdc++']
 #distutils: extra_compile_args = ["-std=c++11"]
+#distutils: include_dirs=['/home/timv/anaconda/include/']
 
 """
 Tree-structured group lasso.
