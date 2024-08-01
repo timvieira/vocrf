@@ -4,7 +4,7 @@ Variable-order CRFs
 **Install**
 
 We assume that you are running the
-[Anaconda](https://www.continuum.io/downloads) Python distribution. This code uses Python 2.
+[Anaconda](https://www.continuum.io/downloads) Python distribution.
 
 Type the following in your terminal and you should be good to go!
 
