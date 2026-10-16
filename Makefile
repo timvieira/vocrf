@@ -27,6 +27,7 @@ test: cython
 	python vocrf/test/vocrf_tests.py
 	python vocrf/test/tree_prox_test.py
 	python vocrf/test/spom_test.py
+	python vocrf/test/spom_prox_test.py
 	python -m doctest vocrf/util.py
 	python -m doctest vocrf/pos/features.py
 
