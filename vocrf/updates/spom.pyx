@@ -161,4 +161,4 @@ cdef class OnlineProx(RegularizedAdagrad):
             else:
                 rescale = (self.group_norm[i] - threshold) / self.group_norm[i]
                 for k in self.groups[i]:
-                    self.w[i] *= rescale
+                    self.w[k] *= rescale
